@@ -14,7 +14,7 @@ GREEN = \033[92m
 BLUE = \033[94m
 
 SRCS  = main.cpp \
-		# BitcoinExchange.cpp
+		BitcoinExchange.cpp
 
 OBJ = $(patsubst %.cpp,$(DIR_OBJ)%.o,$(SRCS))
 

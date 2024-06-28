@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:01:11 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/27 18:39:57 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/06/28 10:58:27 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,24 @@ int main(int argc, char const *argv[])
 	std::ifstream infile(infile_name.c_str());
 	if (!infile.is_open())
 	{
-		std::cerr << RED << "Error to open infile" << RESET << std::endl;
+		std::cerr << RED << "Error to open input file." << RESET << std::endl;
 		return (1);
 	}
-
+	BitcoinExchange bitcoin("data.csv");
 	std::string line;
+	std::map<std::string,float>::iterator it;
 	std::getline(infile, line);
-
-	if (isValid(line))
+	while (std::getline(infile, line))
 	{
-		std::string date = findDate(line, ' ');
-		std::cout << date << std::endl;
-		float value = getValue(line, '|');
-		std::cout << value << std::endl;	
+		if (isValid(line))
+		{
+			std::string date = findDate(line, ' ');
+			it = bitcoin.findRate(date);
+			float value = getValue(line, '|');
+			float result = value * it->second;
+			std::cout << date << " => " << value << " = " << result << std::endl;
+		}
 	}
-
 	infile.close();
 	return 0;
 }
