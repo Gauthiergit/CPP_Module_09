@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 13:58:16 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/28 19:32:54 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/07/01 15:58:14 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,23 @@
 #include <algorithm>
 #include <cctype>
 #include <stack>
-#include <cstdlib>
+#include <stdexcept>
 
 class RPN
 {
 	private:
 	
 	std::stack<std::string> tokens;
-	std::stack<int> nbs;
+	std::stack<float> nbs;
 
 	public:
+
+	class InvalidToken : public std::exception
+	{
+		public:
+
+		virtual const char* what() const throw();
+	};
 
 	RPN(const std::string& input);
 	RPN(const RPN &copy);
@@ -35,7 +42,8 @@ class RPN
 
 	RPN& operator=(const RPN &change);
 
-	int	calculate();
+	void	calculate();
+	void	displayRes();
 };
 
 std::stack<std::string> split(const std::string& input);

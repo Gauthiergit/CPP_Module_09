@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:29:14 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/28 19:46:16 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/07/01 15:53:54 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ std::stack<std::string> split(const std::string& input)
 			tokens.pop();
 		}
 		else
-		{
-			std::cout << "Error: Invalid Token." << std::endl;
-			exit(1);
-		}
+			throw RPN::InvalidToken();
 	}
 	return revTokens;
 }
@@ -61,8 +58,16 @@ int main(int argc, char const *argv[])
 		std::cout << "Use: ./RPN <calcul>." << std::endl;
 		return 1;
 	}
-	RPN myRPN(argv[1]);
-	int res = myRPN.calculate();
-	std::cout << res << std::endl;
+	try
+	{
+		RPN myRPN(argv[1]);
+		myRPN.calculate();
+		myRPN.displayRes();
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:06:18 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/28 19:34:48 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/07/01 15:51:55 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,37 +30,60 @@ RPN& RPN::operator=(const RPN &change)
 	return *this;
 }
 
-int	RPN::calculate()
+const char* RPN::InvalidToken::what() const throw()
 {
-	int res = 0;
+	return ("Error: invalid token.");
+}
+
+void	RPN::calculate()
+{
+	float res = 0.0;
+	float temp = 0.0;
 	while(!this->tokens.empty())
 	{
 		if (isdigit(this->tokens.top()[0]))
-			this->nbs.push(std::atoi(this->tokens.top().c_str()));
+			this->nbs.push(std::atof(this->tokens.top().c_str()));
 		else
 		{
-			if (this->nbs.size() == 2)
+			if (this->nbs.size() >= 2)
 			{
-				res = this->nbs.top();
+				temp = this->nbs.top();
 				this->nbs.pop();
 				if (tokens.top()[0] == '+')
-					res += this->nbs.top();
+					res = this->nbs.top() + temp;
 				else if (tokens.top()[0] == '-')
-					res -= this->nbs.top();
+					res = this->nbs.top() - temp;
 				else if (tokens.top()[0] == '*')
-					res *= this->nbs.top();
+					res = this->nbs.top() * temp;
 				else if (tokens.top()[0] == '/')
-					res /= this->nbs.top();
+					res = this->nbs.top() / temp;
 				this->nbs.pop();
 				this->nbs.push(res);
 			}
 			else
-			{
-				std::cout << "Error: Invalid Token." << std::endl;
-				exit(1);
-			}
+				throw RPN::InvalidToken();
 		}
 		this->tokens.pop();
 	}
-	return (this->nbs.top());
+}
+
+void	RPN::displayRes()
+{
+	std::stack<int> revNbs;
+	if (this->nbs.size() > 1)
+	{
+		while (!this->nbs.empty())
+		{
+			revNbs.push(this->nbs.top());
+			this->nbs.pop();
+		}
+		while (!revNbs.empty())
+		{
+			std::cout << revNbs.top() << " ";
+			revNbs.pop();
+		}
+		std::cout << std::endl;
+	}
+	else
+		std::cout << this->nbs.top() << std::endl;
 }
