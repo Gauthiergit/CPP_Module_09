@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 11:57:53 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/28 10:47:13 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/07/02 11:51:37 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class BitcoinExchange
 
 	BitcoinExchange& operator=(const BitcoinExchange &change);
 
-	std::map<std::string,float>::iterator findRate(const std::string& date);
+	std::pair<std::map<std::string,float>::iterator, bool> findRate(const std::string& date);
 };
 
 std::string findDate(const std::string &line, const char sep);

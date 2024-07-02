@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:01:11 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/28 10:58:27 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/07/02 11:49:14 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,17 +76,22 @@ int main(int argc, char const *argv[])
 	}
 	BitcoinExchange bitcoin("data.csv");
 	std::string line;
-	std::map<std::string,float>::iterator it;
+	std::pair<std::map<std::string,float>::iterator, bool> res;
 	std::getline(infile, line);
 	while (std::getline(infile, line))
 	{
 		if (isValid(line))
 		{
 			std::string date = findDate(line, ' ');
-			it = bitcoin.findRate(date);
-			float value = getValue(line, '|');
-			float result = value * it->second;
-			std::cout << date << " => " << value << " = " << result << std::endl;
+			res = bitcoin.findRate(date);
+			if (!res.second)
+				std::cerr << "Error: No corresponding date and previous date." << std::endl;
+			else
+			{
+				float value = getValue(line, '|');
+				float result = value * res.first->second;
+				std::cout << date << " => " << value << " = " << result << std::endl;
+			}
 		}
 	}
 	infile.close();

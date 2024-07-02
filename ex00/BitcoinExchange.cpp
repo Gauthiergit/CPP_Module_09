@@ -6,7 +6,7 @@
 /*   By: gpeyre <gpeyre@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 18:27:40 by gpeyre            #+#    #+#             */
-/*   Updated: 2024/06/28 10:58:33 by gpeyre           ###   ########.fr       */
+/*   Updated: 2024/07/02 11:51:48 by gpeyre           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange &change)
 	return *this;
 }
 
-std::map<std::string,float>::iterator BitcoinExchange::findRate(const std::string& date)
+std::pair<std::map<std::string,float>::iterator, bool> BitcoinExchange::findRate(const std::string& date)
 {
 	std::map<std::string,float>::iterator it;
 	it = this->mymap.find(date);
@@ -51,9 +51,9 @@ std::map<std::string,float>::iterator BitcoinExchange::findRate(const std::strin
 	{
 		it = this->mymap.lower_bound(date);
 		if (it == this->mymap.begin())
-    		return this->mymap.end();
+			return std::make_pair(this->mymap.end(), false);
     	else if (it == this->mymap.end() || it->first > date)
         	--it;
 	}
-	return it;
+	return std::make_pair(it, true);
 }
